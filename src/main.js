@@ -46,11 +46,42 @@ const getWeeklyData = (data) => {
     return months
 }
 
+const getWeeklySuccess = (data) => {
+    const result = data.map((x) => {
+        const fortyfive = x[1].filter((y) => {
+            // y.isFortyFive
+            if(y.isFortyFive === true){
+                return y
+            }
+            
+        })
+        if(fortyfive.length > 3){
+            return {
+                'week': x[0],
+                'fortyFiveSuccess': true,
+                'runsOverFortyFive': fortyfive.length
+            }
+        } else {
+            return {
+                'week': x[0],
+                'fortyFiveSucess': false,
+                'runsOverFortyFive': fortyfive.length
+            }
+        }
+    })
+
+    return result
+}
+
 const getData = async () => {
     const response = await fetch('https://gist.githubusercontent.com/garyditsch/fedf0141723e9b69edc401fa907115f7/raw/a989d4c973a5c0cc75c27f4e3840c0dd0a723292/run.json')
     const data = await response.json()
-    const months = await getWeeklyData(data)    
-    console.log(months)
+    const months = await getWeeklyData(data)
+    const entries = Object.entries(months);
+    
+    // console.log(entries)
+    const results = getWeeklySuccess(entries)
+    console.log(results)
 }
 
 getData()
